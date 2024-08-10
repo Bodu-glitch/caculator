@@ -1,0 +1,31 @@
+<button (click)="increase()">Increase</button>
+<p>Number: {{count$ | async}}</p>
+<button (click)="decrease()">Decrease</button>
+<input (keydown.enter)="inputN()"  [(ngModel)]="inputNum"  type="number" placeholder="enter num">
+<button (click)="reset()">Reset</button>
+<p>Time: {{time$ | async | date: 'medium'}}</p>
+
+<button (click)="this.gotoschoolService.planA()">A</button>
+<button (click)="this.gotoschoolService.planB()">B</button>
+
+<div class="caculator">
+  <div class="display">{{caculator$ | async}}</div>
+  <div class="buttons">
+    <button (click)="displayNum('1')">1</button>
+    <button (click)="displayNum('2')">2</button>
+    <button (click)="displayNum('3')">3</button>
+    <button (click)="setOperator('+')">+</button>
+    <button (click)="displayNum('4')">4</button>
+    <button (click)="displayNum('5')">5</button>
+    <button (click)="displayNum('6')">6</button>
+    <button (click)="setOperator('-')">-</button>
+    <button (click)="displayNum('7')">7</button>
+    <button (click)="displayNum('8')">8</button>
+    <button (click)="displayNum('9')">9</button>
+    <button (click)="setOperator('*')">*</button>
+    <button (click)="displayNum('0')">0</button>
+    <button (click)="clear()">C</button>
+    <button (click)="calculate()">=</button>
+    <button (click)="setOperator('/')">/</button>
+  </div>
+</div>
