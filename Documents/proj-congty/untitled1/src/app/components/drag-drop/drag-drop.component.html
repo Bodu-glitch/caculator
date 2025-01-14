@@ -1,0 +1,25 @@
+<div (mousemove)="onMouseMove($event)" cdkDropListGroup>
+@for (column of columns; track $index) {
+  <div class="example-container">
+    <h2>{{column.title}}</h2>
+    <div
+      style="display:flex;"
+      cdkDropListOrientation="horizontal"
+      cdkDropList
+      [cdkDropListData]="column.cards"
+      class="example-list"
+      (cdkDropListDropped)="drop($event)">
+      @for (item of column.cards; track $index) {
+        <div class="example-box" cdkDrag>{{item.title}}</div>
+      }
+    </div>
+  </div>
+}
+</div>
+
+<button (click)="reset()">Reset</button>
+<div style="width: 70vh; overflow:auto;" >
+  <full-calendar [options]="calendarOptions"></full-calendar>
+</div>
+
+<!--<div style="width: 40px; height: 40px; background-color: red; position: absolute; top: {{data.y}}px; left: {{data.x}}px;"></div>-->
