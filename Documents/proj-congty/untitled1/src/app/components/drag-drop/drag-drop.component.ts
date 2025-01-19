@@ -12,6 +12,10 @@ import {NgClass} from '@angular/common';
 import { CalendarOptions } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import {FullCalendarModule} from '@fullcalendar/angular';
+import interactionPlugin from '@fullcalendar/interaction';
+import timegridPlugin from '@fullcalendar/timegrid';
+import listPlug from '@fullcalendar/list';
+import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
 
 interface card {
   id: string;
@@ -106,14 +110,84 @@ const columns: column[] = [
 })
 export class DragDropComponent implements OnInit{
   calendarOptions: CalendarOptions = {
-    plugins: [dayGridPlugin],
-    initialView: 'dayGridMonth',
-    weekends: false,
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek'
+    },
+    timeZone: 'local',
+    initialView: 'listMonth',
+    businessHours: true, // display business hours
+    editable: true,
+    plugins:[timegridPlugin,dayGridPlugin,interactionPlugin,listPlug],
     events: [
-      { title: 'Meeting', start: new Date(), end: new Date().setDate(15) },
+      {
+        title: 'Business Lunch',
+        start: '2025-01-03T13:00:00',
+        constraint: 'businessHours'
+      },
+      {
+        title: 'Meeting',
+        start: '2025-01-13T11:00:00',
+        // constraint: 'availableForMeeting', // defined below
+        color: '#257e4a'
+      },
+      {
+        title: 'Conference',
+        start: '2025-01-18',
+        end: '2025-01-20'
+      },
+      {
+        title: 'Party',
+        start: '2025-01-29T20:00:00'
+      },
+
+      // // areas where "Meeting" must be dropped
+      // {
+      //   groupId: 'availableForMeeting',
+      //   start: '2025-01-11T10:00:00',
+      //   end: '2025-01-11T16:00:00',
+      //   display: 'background'
+      // },
+      // {
+      //   groupId: 'availableForMeeting',
+      //   start: '2025-01-13T10:00:00',
+      //   end: '2025-01-13T16:00:00',
+      //   display: 'background'
+      // },
+    //   // red areas where no events can be dropped
+    //   {
+    //     start: '2025-01-24',
+    //     end: '2025-01-28',
+    //     overlap: false,
+    //     display: 'background',
+    //     color: '#ff9f89'
+    //   },
+    //   {
+    //     start: '2025-01-06',
+    //     end: '2025-01-08',
+    //     overlap: false,
+    //     display: 'background',
+    //     color: '#ff9f89'
+    //   }
     ]
+
   };
-  constructor(private gateway: GatewayService) {
+
+  currentUser: any;
+
+  //firebase auth
+  constructor(private gateway: GatewayService,
+              private auth: Auth) {
+  }
+
+  async login(){ // Tạo hàm login
+    const credential = await signInWithPopup(this.auth, new GoogleAuthProvider());
+    // Sử dụng signInWithPopup để đăng nhập bằng Google
+    this.currentUser = credential.user; // Lưu thông tin người dùng vào biến currentUser
+    console.log(this.currentUser); // Log ra thông tin người dùng
+    const token = await credential.user.getIdToken(); // Lấy token của người dùng
+    console.log(token); // Log ra token
   }
 
   isMouseLeave = false;
